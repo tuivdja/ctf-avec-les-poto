@@ -1,215 +1,193 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+<meta charset="UTF-8">
+<title>Jeu : Clique le carré rouge</title>
 <style>
+
     body {
-        margin: 0;
-        font-family: 'Montserrat', Arial, sans-serif;
-        background: linear-gradient(135deg, #f5f7fa, #c3cfe2, #e2eafc, #f9f9f9);
-        background-size: 100% 200%;
-        animation: gradientMove 10s linear infinite;
-        color: #222;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+
+      font-family: Arial, sans-serif;
+
+      background-color: #121212;
+
+      color: white;
+
+      text-align: center;
+
+      margin: 0;
+
+      padding: 0;
+
     }
-    @keyframes gradientMove {
-        0% { background-position: 0% 0%; }
-        100% { background-position: 0% 100%; }
-    }
+ 
     h1 {
-        font-size: 3.2rem;
-        color: #1a237e;
-        text-shadow: 2px 4px 16px #c3cfe2, 0 2px 8px #e2eafc;
-        letter-spacing: 2px;
-        font-weight: 900;
-        margin-bottom: 2rem;
-        text-transform: uppercase;
-        text-align: center;
+
+      color: #e74c3c;
+
     }
-    form#quizForm {
-        background: #fff;
-        border-radius: 18px;
-        box-shadow: 0 4px 24px rgba(30,60,114,0.10);
-        padding: 2.5rem 3rem;
-        min-width: 420px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-bottom: 2rem;
+ 
+    #gameArea {
+
+      position: relative;
+
+      width: 100%;
+
+      height: 80vh;
+
+      border: 2px solid #fff;
+
+      overflow: hidden;
+
+      background-color: #1e1e1e;
+
     }
-    form#quizForm div {
-        margin-bottom: 1.5rem;
-        width: 100%;
+ 
+    .target {
+
+      width: 50px;
+
+      height: 50px;
+
+      background-color: red;
+
+      position: absolute;
+
+      cursor: pointer;
+
+      border-radius: 5px;
+
     }
-    form#quizForm p {
-        font-size: 1.25rem;
-        font-weight: bold;
-        margin-bottom: 0.7rem;
-        text-align: center;
+ 
+    #score {
+
+      font-size: 24px;
+
+      margin-top: 10px;
+
     }
-    form#quizForm label {
-        display: block;
-        font-size: 1.1rem;
-        margin-bottom: 0.3rem;
-        cursor: pointer;
-        text-align: center;
+ 
+    #startBtn {
+
+      background-color: #e74c3c;
+
+      color: white;
+
+      border: none;
+
+      padding: 10px 20px;
+
+      font-size: 18px;
+
+      cursor: pointer;
+
+      margin-top: 20px;
+
+      border-radius: 8px;
+
     }
-    #result {
-        margin-top: 1.5rem;
-        font-size: 1.3rem;
-        text-align: center;
-    }
-    .btn, button[type="button"] {
-        margin-top: 2rem;
-        padding: 1.1rem 2.7rem;
-        font-size: 1.25rem;
-        font-weight: bold;
-        color: #fff;
-        background: #1a237e;
-        border: none;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(30,60,114,0.10);
-        cursor: pointer;
-        transition: background 0.2s, transform 0.2s;
-        text-decoration: none;
-        display: inline-block;
-    }
-    .btn:hover, button[type="button"]:hover {
-        background: #3949ab;
-        transform: translateY(-3px) scale(1.04);
-    }
-    footer {
-        text-align: center;
-        padding: 1rem 0;
-        background: #e2eafc;
-        color: #3b4a6b;
-        font-size: 1rem;
-        letter-spacing: 1px;
-        position: fixed;
-        width: 100%;
-        bottom: 0;
-        left: 0;
-        box-shadow: 0 -2px 8px rgba(30,60,114,0.08);
+ 
+    #startBtn:hover {
+
+      background-color: #c0392b;
+
     }
 </style>
-    <meta charset="UTF-8">
-    <div class="container" data-flag="flag{python_est_genial}">
-  <h1>- Quiz Python -</h1>
+</head>
+<body>
  
-  <!-- Q1 -->
-  <div class="question" data-type="choix" data-correct="1">
-    <p><strong></strong>1. Python est...</strong></p>
-    <label><input type="radio" name="q1" value="0">Un navigateur</label>
-    <label><input type="radio" name="q1" value="1">Un langage de programmation</label>
-    <label><input type="radio" name="q1" value="0">Un animal rampant</label>
-  </div>
+  <h1>🎯 Clique sur le carré rouge !</h1>
+<div id="score">Score : 0</div>
+<button id="startBtn">Commencer</button>
  
-  <!-- Q2 -->
-  <div class="question" data-type="texte" data-correct="print(&quot;Bonjour&quot;)">
-    <p>2. Quelle instruction permet d'afficher Bonjour à l'écran ?</p>
-    <input type="text" name="q2">
-  </div>
+  <div id="gameArea"></div>
  
-  <!-- Q3 -->
-  <div class="question" data-type="choix" data-correct="1">
-    <p>3. Que fait la commande <code>input()</code> ?</p>
-    <label><input type="radio" name="q3" value="1">Demande une saisie utilisateur</label>
-    <label><input type="radio" name="q3" value="0">Crée une boucle</label>
-    <label><input type="radio" name="q3" value="0">Efface l’écran</label>
-  </div>
- 
-  <!-- Q4 -->
-  <div class="question" data-type="texte" data-correct="if">
-    <p>4. Quel mot-clé permet de faire une condition en Python ?</p>
-    <input type="text" name="q4">
-  </div>
- 
-  <!-- Q5 -->
-  <div class="question" data-type="choix" data-correct="0">
-    <p>5. Qu'est ce qu'un booléen ?</p>
-    <label><input type="radio" name="q5" value="0">Une valeur Vrai ou Faux</label>
-    <label><input type="radio" name="q5" value="1">Une envie</label>
-    <label><input type="radio" name="q5" value="2">Un entier négatif</label>
-  </div>
- 
-  <!-- Flag CTF -->
-  <div class="question">
-    <p>6. BONUS : Un flag est caché dans cette page. Utilise F12 ou clique droit → Inspecter pour le trouver !</p>
-    <input type="text" id="flagInput" placeholder="Entre le flag ici">
-    <button onclick="verifierFlag()">Valider le flag</button>
-    <p id="flagMessage"></p>
-  </div>
- 
-  <button onclick="corriger()">Vérifier mes réponses</button>
-  <p id="score"></p>
-</div>
- 
-<script>
-  function corriger() {
-    const questions = document.querySelectorAll(".question[data-type]");
-    let score = 0;
-    let total = 0;
-    let erreurs = [];
- 
-    questions.forEach((question, index) => {
-      const type = question.dataset.type;
-      const nom = "q" + (index + 1);
-      const bonneReponse = question.dataset.correct.trim();
-      let estJuste = false;
- 
-      if (type === "choix") {
-        const reponse = question.querySelector(`input[name="${nom}"]:checked`);
-        if (reponse) {
-          if (reponse.value === bonneReponse) {
-            estJuste = true;
-            reponse.disabled = true;
-          } else {
-            erreurs.push(question);
-          }
-        }
-        const radios = question.querySelectorAll(`input[name="${nom}"]`);
-        radios.forEach(r => r.disabled = true);
-      }
- 
-      if (type === "texte") {
-        const champ = question.querySelector('input[type="text"]');
-        if (champ.value.trim().toLowerCase() === bonneReponse.toLowerCase()) {
-          estJuste = true;
-        } else {
-          erreurs.push(question);
-        }
-        champ.readOnly = true;
-      }
- 
-      if (estJuste) score++;
-      total++;
-    });
- 
-    erreurs.forEach(q => q.classList.add("incorrect"));
- 
-    document.getElementById("score").textContent = ` Tu as ${score} / ${total} bonnes réponses.`;
-  }
- 
-  function verifierFlag() {
-    const flag = document.getElementById("flagInput").value.trim();
-    const bonFlag = "flag{python_est_genial}";
-    const msg = document.getElementById("flagMessage");
+  <script>
 
-    if (flag === bonFlag) {
-        msg.style.color = "lightgreen";
-        msg.textContent = " Flag correct ! Redirection en cours...";
-        setTimeout(() => {
-            window.location.href = "jeu3.html";
-        }, 1500);
-    } else {
-        msg.style.color = "red";
-        msg.textContent = " Flag incorrect. Cherche bien dans le code HTML ";
+    const gameArea = document.getElementById('gameArea');
+
+    const scoreDisplay = document.getElementById('score');
+
+    const startBtn = document.getElementById('startBtn');
+ 
+    let score = 0;
+
+    let gameRunning = false;
+
+    let squareTimeout;
+ 
+    function getRandomPosition() {
+
+      const x = Math.random() * (gameArea.clientWidth - 50);
+
+      const y = Math.random() * (gameArea.clientHeight - 50);
+
+      return { x, y };
+
     }
-  }
+ 
+    function createSquare() {
+
+      const square = document.createElement('div');
+
+      square.classList.add('target');
+
+      const { x, y } = getRandomPosition();
+
+      square.style.left = x + 'px';
+
+      square.style.top = y + 'px';
+
+      square.onclick = () => {
+
+        score++;
+
+        scoreDisplay.textContent = 'Score : ' + score;
+
+        square.remove();
+
+        clearTimeout(squareTimeout);
+
+        setTimeout(spawnSquare, 500 + Math.random() * 1000);
+
+      };
+
+      gameArea.appendChild(square);
+ 
+      squareTimeout = setTimeout(() => {
+
+        square.remove();
+
+        setTimeout(spawnSquare, 500 + Math.random() * 1000);
+
+      }, 2000);
+
+    }
+ 
+    function spawnSquare() {
+
+      if (!gameRunning) return;
+
+      createSquare();
+
+    }
+ 
+    startBtn.onclick = () => {
+
+      score = 0;
+
+      scoreDisplay.textContent = 'Score : ' + score;
+
+      gameArea.innerHTML = '';
+
+      gameRunning = true;
+
+      spawnSquare();
+
+    };
 </script>
  
 </body>
 </html>
+
+ 
