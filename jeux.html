@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>CTF – Quiz Facile+</title>
+</head>
+<style>
+    body {
+        margin: 0;
+        font-family: 'Montserrat', Arial, sans-serif;
+        background: linear-gradient(135deg, #f5f7fa, #c3cfe2, #e2eafc, #f9f9f9);
+        background-size: 100% 200%;
+        animation: gradientMove 10s linear infinite;
+        color: #222;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    @keyframes gradientMove {
+        0% { background-position: 0% 0%; }
+        100% { background-position: 0% 100%; }
+    }
+    h1 {
+        font-size: 3.2rem;
+        color: #1a237e;
+        text-shadow: 2px 4px 16px #c3cfe2, 0 2px 8px #e2eafc;
+        letter-spacing: 2px;
+        font-weight: 900;
+        margin-bottom: 2rem;
+        text-transform: uppercase;
+        text-align: center;
+    }
+    form#quizForm {
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 24px rgba(30,60,114,0.10);
+        padding: 2.5rem 3rem;
+        min-width: 420px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+    form#quizForm div {
+        margin-bottom: 1.5rem;
+        width: 100%;
+    }
+    form#quizForm p {
+        font-size: 1.25rem;
+        font-weight: bold;
+        margin-bottom: 0.7rem;
+        text-align: center;
+    }
+    form#quizForm label {
+        display: block;
+        font-size: 1.1rem;
+        margin-bottom: 0.3rem;
+        cursor: pointer;
+        text-align: center;
+    }
+    #result {
+        margin-top: 1.5rem;
+        font-size: 1.3rem;
+        text-align: center;
+    }
+    .btn, button[type="button"] {
+        margin-top: 2rem;
+        padding: 1.1rem 2.7rem;
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: #fff;
+        background: #1a237e;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(30,60,114,0.10);
+        cursor: pointer;
+        transition: background 0.2s, transform 0.2s;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .btn:hover, button[type="button"]:hover {
+        background: #3949ab;
+        transform: translateY(-3px) scale(1.04);
+    }
+    footer {
+        text-align: center;
+        padding: 1rem 0;
+        background: #e2eafc;
+        color: #3b4a6b;
+        font-size: 1rem;
+        letter-spacing: 1px;
+        position: fixed;
+        width: 100%;
+        bottom: 0;
+        left: 0;
+        box-shadow: 0 -2px 8px rgba(30,60,114,0.08);
+    }
+</style>
+<body>
+ 
+  <h1>🧩 Mini CTF – Niveau Facile+</h1>
+ 
+  <form id="quizForm">
+ 
+    <div>
+      <p><strong>1. Quel composant exécute les instructions d’un programme ?</strong></p>
+      <label><input type="radio" name="q1" value="cpu"> Le processeur (CPU)</label>
+      <label><input type="radio" name="q1" value="ram"> La RAM</label>
+      <label><input type="radio" name="q1" value="disque"> Le disque dur</label>
+    </div>
+ 
+    <div>
+      <p><strong>2. Que stocke la RAM ?</strong></p>
+      <label><input type="radio" name="q2" value="temporaire"> Des données temporaires</label>
+      <label><input type="radio" name="q2" value="permanente"> Des données permanentes</label>
+      <label><input type="radio" name="q2" value="internet"> Des pages web</label>
+    </div>
+ 
+    <div>
+      <p><strong>3. À quoi sert une carte graphique (GPU) ?</strong></p>
+      <label><input type="radio" name="q3" value="image"> Afficher des images et vidéos</label>
+      <label><input type="radio" name="q3" value="reseau"> Se connecter à Internet</label>
+      <label><input type="radio" name="q3" value="sons"> Émettre du son</label>
+    </div>
+ 
+    <div>
+      <p><strong>4. Lequel est un périphérique d’entrée ?</strong></p>
+      <label><input type="radio" name="q4" value="clavier"> Le clavier</label>
+      <label><input type="radio" name="q4" value="écran"> L’écran</label>
+      <label><input type="radio" name="q4" value="hautparleur"> Le haut-parleur</label>
+    </div>
+ 
+    <div>
+      <p><strong>5. Quel type de mémoire conserve les données même sans courant ?</strong></p>
+      <label><input type="radio" name="q5" value="ssd"> Le SSD / Disque dur</label>
+      <label><input type="radio" name="q5" value="ram"> La RAM</label>
+      <label><input type="radio" name="q5" value="gpu"> Le GPU</label>
+    </div>
+ 
+    <button type="button" onclick="checkAnswers()">✅ Valider mes réponses</button>
+  </form>
+ 
+  <div id="result"></div>
+ 
+  <script>
+    function checkAnswers() {
+      const correctAnswers = {
+        q1: "cpu",
+        q2: "temporaire",
+        q3: "image",
+        q4: "clavier",
+        q5: "ssd"
+      };
+
+      let score = 0;
+      for (let q in correctAnswers) {
+        const selected = document.querySelector(`input[name="${q}"]:checked`);
+        if (selected && selected.value === correctAnswers[q]) {
+          score++;
+        }
+      }
+
+      const resultBox = document.getElementById("result");
+
+      if (score === Object.keys(correctAnswers).length) {
+        resultBox.style.display = "block";
+        resultBox.style.borderLeft = "";
+        resultBox.innerHTML = `
+          🥳 Bravo ! Toutes les réponses sont correctes.<br><br>
+          🎉 Voici ton flag : <code>FLAG{niveau_facile_plus_valide}</code>
+        `;
+        // Redirige vers jeu2.html après 1 seconde
+        setTimeout(function() {
+          window.location.href = "jeu2.html";
+        }, 1000);
+      } else {
+        resultBox.style.display = "block";
+        resultBox.style.borderLeft = "";
+        resultBox.innerHTML = `
+          ❌ Il y a ${5 - score} mauvaise(s) réponse(s). Corrige-les et réessaie !
+        `;
+      }
+    }
+  </script>
+ 
+</body>
+</html>

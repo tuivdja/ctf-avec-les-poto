@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <style>
+    body {
+        margin: 0;
+        font-family: 'Montserrat', Arial, sans-serif;
+        background: linear-gradient(135deg, #f5f7fa, #c3cfe2, #e2eafc, #f9f9f9);
+        background-size: 100% 200%;
+        animation: gradientMove 10s linear infinite;
+        color: #222;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    @keyframes gradientMove {
+        0% { background-position: 0% 0%; }
+        100% { background-position: 0% 100%; }
+    }
+    h1 {
+        font-size: 3.2rem;
+        color: #1a237e;
+        text-shadow: 2px 4px 16px #c3cfe2, 0 2px 8px #e2eafc;
+        letter-spacing: 2px;
+        font-weight: 900;
+        margin-bottom: 2rem;
+        text-transform: uppercase;
+        text-align: center;
+    }
+    form#quizForm {
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 24px rgba(30,60,114,0.10);
+        padding: 2.5rem 3rem;
+        min-width: 420px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+    form#quizForm div {
+        margin-bottom: 1.5rem;
+        width: 100%;
+    }
+    form#quizForm p {
+        font-size: 1.25rem;
+        font-weight: bold;
+        margin-bottom: 0.7rem;
+        text-align: center;
+    }
+    form#quizForm label {
+        display: block;
+        font-size: 1.1rem;
+        margin-bottom: 0.3rem;
+        cursor: pointer;
+        text-align: center;
+    }
+    #result {
+        margin-top: 1.5rem;
+        font-size: 1.3rem;
+        text-align: center;
+    }
+    .btn, button[type="button"] {
+        margin-top: 2rem;
+        padding: 1.1rem 2.7rem;
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: #fff;
+        background: #1a237e;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(30,60,114,0.10);
+        cursor: pointer;
+        transition: background 0.2s, transform 0.2s;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .btn:hover, button[type="button"]:hover {
+        background: #3949ab;
+        transform: translateY(-3px) scale(1.04);
+    }
+    footer {
+        text-align: center;
+        padding: 1rem 0;
+        background: #e2eafc;
+        color: #3b4a6b;
+        font-size: 1rem;
+        letter-spacing: 1px;
+        position: fixed;
+        width: 100%;
+        bottom: 0;
+        left: 0;
+        box-shadow: 0 -2px 8px rgba(30,60,114,0.08);
+    }
+</style>
+    <meta charset="UTF-8">
+    <title>CTF Cyber - Challenge Mot de Passe</title>
+   
+    <!-- ASTUCE : Appuie sur F12 pour ouvrir l'inspecteur et trouver le flag dans le code ! -->
+    <script>
+        function verifierFlag() {
+            const flag = document.getElementById('flag').value;
+            const message = document.getElementById('message');
+            // FLAG : CTF{motdepasseSecurise2025}
+            if(flag === "CTF{motdepasseSecurise2025}") {
+                message.textContent = "Bravo ! Flag correct 🎉";
+                message.className = "success";
+            } else {
+                message.textContent = "Flag incorrect. Réessaie !";
+                message.className = "error";
+            }
+            return false;
+        }
+ 
+        function afficherIndice(num) {
+            const div = document.getElementById('indice');
+            div.className = "indice-visible";
+            if(num === 1) {
+                div.innerHTML = "6.L : alphabet";
+            } else if(num === 2) {
+                div.innerHTML = 'Appuie sur <b>F12</b> pour ouvrir l\'inspecteur.<br><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/F12_key.svg/1200px-F12_key.svg.png" alt="Touche F12" style="height:40px;">';
+            }
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>CTF Cyber - Challenge Mot de Passe</h1>
+    </header>
+    <main>
+        <h2>Challenge&nbsp;: Trouve le Flag</h2>
+        <p>
+            Pour réussir ce challenge, tu dois trouver le flag caché.<br>
+            Indice&nbsp;: 6.L&nbsp;!
+        </p>
+        <button type="button" onclick="afficherIndice(1)">Indice 1</button>
+        <button type="button" onclick="afficherIndice(2)">Indice 2</button>
+        <div id="indice"></div>
+        <form onsubmit="return verifierFlag();">
+            <label for="flag">Entre le flag&nbsp;:</label>
+            <input type="text" id="flag" autocomplete="off" required>
+            <button type="submit">Valider</button>
+        </form>
+        <div id="message"></div>
+    </main>
+</body>
+</html>
+ 

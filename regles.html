@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Montserrat', Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2, #e2eafc, #f9f9f9);
+            background-size: 100% 200%;
+            animation: gradientMove 10s linear infinite;
+            color: #222;
+            min-height: 100vh;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 0% 100%; }
+        }
+        header {
+            text-align: center;
+            padding: 3rem 1rem 2rem 1rem;
+        }
+        header h1 {
+            font-size: 3rem;
+            color: #1a237e;
+            text-shadow: 2px 4px 16px #c3cfe2, 0 2px 8px #e2eafc;
+            letter-spacing: 2px;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+        header p {
+            font-size: 1.3rem;
+            color: #3b4a6b;
+            margin-top: 0;
+        }
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 50vh;
+        }
+        .btn {
+            margin-top: 2rem;
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+            background: #1a237e;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(30,60,114,0.10);
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+            text-decoration: none;
+        }
+        .btn:hover {
+            background: #3949ab;
+            transform: translateY(-3px) scale(1.04);
+        }
+        footer {
+            text-align: center;
+            padding: 1rem 0;
+            background: #e2eafc;
+            color: #3b4a6b;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+            box-shadow: 0 -2px 8px rgba(30,60,114,0.08);
+        }
+    </style>
+    <meta charset="UTF-8">
+    <title>Règles du CTF</title>
+</head>
+<body>
+    <div class="main-content">
+        <h1 style="text-align:center; font-size:2.6rem;">Règles du CTF</h1>
+        <p style="text-align:center; font-size:1.5rem; margin-top:2rem;">
+            Résoudre les différentes énigmes afin de trouver les flags.
+        </p>
+        <p style="text-align:center; font-size:1.5rem; color:#c62828; font-weight:bold;">
+            Attention : ChatGPT est interdit !
+        </p>
+    </div>
+</body>
+</html>
