@@ -1,193 +1,108 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Jeu : Clique le carré rouge</title>
-<style>
-
-    body {
-
-      font-family: Arial, sans-serif;
-
-      background-color: #121212;
-
-      color: white;
-
-      text-align: center;
-
-      margin: 0;
-
-      padding: 0;
-
+  <meta charset="UTF-8">
+  <title>Mini CodeCombat Informatique</title>
+  <style>
+    body { background: #222; color: #fff; font-family: Arial, sans-serif; text-align: center; }
+    .game-board { display: inline-block; margin: 30px auto; }
+    .row { display: flex; }
+    .cell {
+      width: 50px; height: 50px; border: 1px solid #444;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2em; background: #333;
     }
- 
-    h1 {
-
-      color: #e74c3c;
-
-    }
- 
-    #gameArea {
-
-      position: relative;
-
-      width: 100%;
-
-      height: 80vh;
-
-      border: 2px solid #fff;
-
-      overflow: hidden;
-
-      background-color: #1e1e1e;
-
-    }
- 
-    .target {
-
-      width: 50px;
-
-      height: 50px;
-
-      background-color: red;
-
-      position: absolute;
-
-      cursor: pointer;
-
-      border-radius: 5px;
-
-    }
- 
-    #score {
-
-      font-size: 24px;
-
-      margin-top: 10px;
-
-    }
- 
-    #startBtn {
-
-      background-color: #e74c3c;
-
-      color: white;
-
-      border: none;
-
-      padding: 10px 20px;
-
-      font-size: 18px;
-
-      cursor: pointer;
-
-      margin-top: 20px;
-
-      border-radius: 8px;
-
-    }
- 
-    #startBtn:hover {
-
-      background-color: #c0392b;
-
-    }
-</style>
+    .player { color: #ffd700; }
+    .treasure { color: #43cea2; }
+    textarea { width: 350px; height: 80px; margin-top: 20px; font-size: 1em; }
+    button { margin-top: 10px; padding: 10px 24px; font-size: 1em; border-radius: 8px; border: none; background: #185a9d; color: #fff; cursor: pointer; }
+    #hint { margin: 18px 0; color: #ffd700; }
+    #result { margin: 18px 0; font-weight: bold; }
+  </style>
 </head>
 <body>
- 
-  <h1>🎯 Clique sur le carré rouge !</h1>
-<div id="score">Score : 0</div>
-<button id="startBtn">Commencer</button>
- 
-  <div id="gameArea"></div>
- 
+  <h1>Mini CodeCombat Informatique</h1>
+  <div class="game-board" id="board"></div>
+  <div id="hint">
+    <b>Indice JavaScript :</b> <br>
+    <code>moveRight();</code> &nbsp; <code>moveDown();</code> <br>
+    <b>Indice Python :</b> <br>
+    <code>move_right()</code> &nbsp; <code>move_down()</code>
+  </div>
+  <textarea id="code" placeholder="Écris ici tes instructions..."></textarea><br>
+  <button onclick="runCode()">Lancer le code</button>
+  <div id="result"></div>
   <script>
+    // Plateau 4x4, joueur en haut à gauche, trésor à une position aléatoire
+    const size = 4;
+    let player = {x:0, y:0};
+    const treasure = {x:3, y:3};
 
-    const gameArea = document.getElementById('gameArea');
-
-    const scoreDisplay = document.getElementById('score');
-
-    const startBtn = document.getElementById('startBtn');
- 
-    let score = 0;
-
-    let gameRunning = false;
-
-    let squareTimeout;
- 
-    function getRandomPosition() {
-
-      const x = Math.random() * (gameArea.clientWidth - 50);
-
-      const y = Math.random() * (gameArea.clientHeight - 50);
-
-      return { x, y };
-
+    function randomTreasure() {
+      let tx, ty;
+      do {
+        tx = Math.floor(Math.random() * size);
+        ty = Math.floor(Math.random() * size);
+      } while (tx === 0 && ty === 0);
+      treasure.x = tx;
+      treasure.y = ty;
     }
- 
-    function createSquare() {
 
-      const square = document.createElement('div');
-
-      square.classList.add('target');
-
-      const { x, y } = getRandomPosition();
-
-      square.style.left = x + 'px';
-
-      square.style.top = y + 'px';
-
-      square.onclick = () => {
-
-        score++;
-
-        scoreDisplay.textContent = 'Score : ' + score;
-
-        square.remove();
-
-        clearTimeout(squareTimeout);
-
-        setTimeout(spawnSquare, 500 + Math.random() * 1000);
-
-      };
-
-      gameArea.appendChild(square);
- 
-      squareTimeout = setTimeout(() => {
-
-        square.remove();
-
-        setTimeout(spawnSquare, 500 + Math.random() * 1000);
-
-      }, 2000);
-
+    function drawBoard() {
+      const board = document.getElementById('board');
+      board.innerHTML = '';
+      for(let y=0; y<size; y++) {
+        const row = document.createElement('div');
+        row.className = 'row';
+        for(let x=0; x<size; x++) {
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          if(player.x === x && player.y === y) cell.innerHTML = '<span class="player">🤖</span>';
+          else if(treasure.x === x && treasure.y === y) cell.innerHTML = '<span class="treasure">💎</span>';
+          row.appendChild(cell);
+        }
+        board.appendChild(row);
+      }
     }
- 
-    function spawnSquare() {
 
-      if (!gameRunning) return;
-
-      createSquare();
-
+    function resetGame(newTreasure = false) {
+      player = {x:0, y:0};
+      if(newTreasure) randomTreasure();
+      drawBoard();
+      document.getElementById('result').textContent = '';
     }
- 
-    startBtn.onclick = () => {
 
-      score = 0;
+    // Fonctions utilisables par l'élève
+    function moveRight() { if(player.x < size-1) { player.x++; drawBoard(); } }
+    function moveDown() { if(player.y < size-1) { player.y++; drawBoard(); } }
+    // Version Python
+    function move_right() { moveRight(); }
+    function move_down() { moveDown(); }
 
-      scoreDisplay.textContent = 'Score : ' + score;
+    function runCode() {
+      resetGame();
+      const code = document.getElementById('code').value;
+      try {
+        // Sécurité simple : n'autorise que les fonctions de déplacement
+        if(!/^[\s\w();_]+$/.test(code)) throw "Caractères non autorisés.";
+        // Exécute le code ligne par ligne
+        const lines = code.split('\n');
+        for(let line of lines) {
+          if(line.trim()) eval(line.trim());
+        }
+        if(player.x === treasure.x && player.y === treasure.y) {
+          document.getElementById('result').textContent = "Bravo ! Tu as trouvé le trésor 💎";
+        } else {
+          document.getElementById('result').textContent = "Le robot n'est pas encore arrivé au trésor. Le trésor change de place !";
+          resetGame(true); // Réinitialise et change la place du trésor
+        }
+      } catch(e) {
+        document.getElementById('result').textContent = "Erreur dans ton code : " + e;
+      }
+    }
 
-      gameArea.innerHTML = '';
-
-      gameRunning = true;
-
-      spawnSquare();
-
-    };
-</script>
- 
+    randomTreasure();
+    drawBoard();
+  </script>
 </body>
 </html>
-
- 
