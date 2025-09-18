@@ -1,468 +1,286 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <title>Quiz - Python</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>QCM Semaine du Numérique</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to left, #000000, #d2bbbb, #000000);
-      color: #f1f1f1;
-      padding: 20px;
+    :root{
+      --bg:#f7f9fc;--card:#ffffff;--accent:#2563eb;--success:#10b981;--danger:#ef4444;--muted:#6b7280;
     }
+    *{box-sizing:border-box}
+    body{font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin:0; background:linear-gradient(180deg,#edf2ff 0%,var(--bg) 100%); color:#0f172a}
+    .container{max-width:900px;margin:36px auto;padding:20px}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    h1{font-size:1.5rem;margin:0}
+    .meta{color:var(--muted);font-size:0.95rem}
 
-    .container {
-      max-width: 800px;
-      margin: auto;
-      background-color: #1e1e1e;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
-    }
+    .card{background:var(--card);border-radius:12px;padding:18px;box-shadow:0 6px 18px rgba(15,23,42,0.06);}
+    .question{padding:14px;border-radius:10px;border:1px solid rgba(15,23,42,0.04);margin-bottom:10px}
+    .q-title{font-weight:600;margin-bottom:8px}
+    .options{display:grid;grid-template-columns:1fr;gap:8px}
+    .option{padding:10px;border-radius:8px;border:1px solid rgba(15,23,42,0.06);cursor:pointer;user-select:none}
+    .option input{margin-right:10px}
+    .option:hover{transform:translateY(-2px)}
+    .option.selected{background:linear-gradient(90deg,rgba(37,99,235,0.08),rgba(37,99,235,0.02));border-color:var(--accent)}
+    .option.correct{background:linear-gradient(90deg,rgba(16,185,129,0.08),rgba(16,185,129,0.02));border-color:var(--success)}
+    .option.wrong{background:linear-gradient(90deg,rgba(239,68,68,0.06),rgba(239,68,68,0.02));border-color:var(--danger)}
 
-    h1 {
-      text-align: center;
-      color: #3399ff;
-    }
+    .controls{display:flex;gap:8px;align-items:center;margin-top:12px}
+    button{background:var(--accent);color:white;border:0;padding:8px 12px;border-radius:8px;cursor:pointer}
+    button.secondary{background:#fff;border:1px solid rgba(15,23,42,0.06);color:var(--muted)}
+    .score{font-weight:700}
+    .small{font-size:0.9rem;color:var(--muted)}
+    .progress{height:10px;background:rgba(15,23,42,0.06);border-radius:8px;overflow:hidden}
+    .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#7c3aed);width:0%}
 
-    .question {
-      margin-bottom: 25px;
-    }
+    footer{margin-top:18px;color:var(--muted);font-size:0.9rem;text-align:center}
 
-    label {
-      display: block;
-      margin: 5px 0;
-      color: #e0e0e0;
-    }
-
-    input[type="radio"],
-    input[type="text"] {
-      margin-right: 8px;
-    }
-
-    input[type="text"] {
-      padding: 8px;
-      width: 100%;
-      max-width: 400px;
-      background-color: #333;
-      border: 1px solid #555;
-      border-radius: 5px;
-      color: white;
-    }
-
-    button {
-      padding: 10px 20px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 16px;
-      margin-top: 20px;
-    }
-
-    button:hover {
-      background-color: #45a049;
-    }
-
-    #score {
-      font-size: 20px;
-      text-align: center;
-      font-weight: bold;
-      color: #66ccff;
-      margin-top: 15px;
-    }
-
-    .incorrect {
-      border-left: 4px solid rgb(255, 0, 0);
-      padding-left: 10px;
-      background-color: #2b1f1f;
-    }
-
-    .correctAnswer {
-      color: #a3ffb0;
-      font-style: italic;
-      margin-top: 5px;
-      margin-left: 15px;
-    }
-
-    #timer {
-      font-weight: bold;
-      font-size: 18px;
-      text-align: center;
-      margin-bottom: 15px;
-      color: #ffcc00;
-    }
-
-    #startSection {
-      max-width: 400px;
-      margin: 100px auto;
-      background-color: #1e1e1e;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
-      text-align: center;
-    }
-
-    #records {
-      margin-top: 30px;
-      background: #122329;
-      padding: 15px;
-      border-radius: 12px;
-    }
-
-    #records h2 {
-      color: #66ccff;
-      margin-bottom: 10px;
-      text-align: center;
-    }
-
-    #records table {
-      width: 100%;
-      border-collapse: collapse;
-      color: white;
-    }
-
-    #records th, #records td {
-      border: 1px solid #3399ff;
-      padding: 8px;
-      text-align: center;
-    }
-
-    #records th {
-      background-color: #3399ff;
-      color: #000;
-    }
-
-    #resetRecordsBtn {
-      background-color: #d9534f;
-      margin-top: 15px;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      color: white;
-      cursor: pointer;
-      font-size: 16px;
-    }
-    #resetRecordsBtn:hover {
-      background-color: #c9302c;
-    }
-
-    /* Barre de progression */
-    #progressBarContainer {
-      height: 20px;
-      background-color: #444;
-      border-radius: 10px;
-      margin: 20px 0;
-      overflow: hidden;
-    }
-    #progressBar {
-      height: 100%;
-      background-color: #3399ff;
-      width: 0%;
-      transition: width 0.3s ease;
-    }
+    @media (min-width:700px){.options{grid-template-columns:1fr 1fr}}
   </style>
 </head>
 <body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>QCM — Semaine du Numérique</h1>
+        <div class="meta">10 questions — Sur l'informatique (tu reussis pas, tu redouble)</div>
+      </div>
+    </header>
 
-<!-- Section pour entrer le pseudo avant de commencer -->
-<div id="startSection">
-  <h1>Bienvenue au Quiz Python !</h1>
-  <p>Entrez ton pseudo pour commencer :</p>
-  <input type="text" id="pseudoInput" placeholder="Ton pseudo ici" autocomplete="off" />
-  <br />
-  <button id="startBtn">Commencer le quiz</button>
-  <p id="startError" style="color: red; display:none;"></p>
-</div>
+    <main class="card" id="quizCard">
+      <div id="progressWrap" style="margin-bottom:12px">
+        <div class="progress" aria-hidden="true"><i id="progressBar"></i></div>
+        <div style="display:flex;justify-content:space-between;margin-top:6px"><span id="qIndex">Question 1 / 10</span></div>
+      </div>
 
-<!-- Quiz caché avant démarrage -->
-<div class="container" data-flag="flag{python_est_genial}" style="display:none;" id="quizContainer">
-  <h1>- Quiz Python : niveau Seconde -</h1>
-  <div id="timer">Temps écoulé : 0 s</div>
+      <div id="questions"></div>
 
-  <!-- Barre de progression -->
-  <div id="progressBarContainer">
-    <div id="progressBar"></div>
+      <div class="controls">
+        <button id="prevBtn" class="secondary">Retour</button>
+        <button id="nextBtn">Suivant</button>
+        <button id="submitBtn">Confirmer</button>
+        <button id="restartBtn" class="secondary">Recommencer</button>
+        <div style="margin-left:auto;text-align:right">
+          <div class="small">Score : <span class="score" id="score">0</span> / <span id="total">10</span></div>
+        </div>
+      </div>
+
+    </main>
+
+    <footer>
+        Créer par Ismaa.
+    </footer>
   </div>
 
-  <!-- Q1 -->
-  <div class="question" data-type="choix" data-correct="1">
-    <p>1. Python est...</p>
-    <label><input type="radio" name="q1" value="0">Un nouveau boss dans Fortnite</label>
-    <label><input type="radio" name="q1" value="1">Un langage de programmation (et pas une serpillière numérique)</label>
-    <label><input type="radio" name="q1" value="2">Un navigateur Web (non, ça c’est Chrome... ou Internet Explorer pour les courageux)</label>
-  </div>
-
-  <!-- Q2 -->
-  <div class="question" data-type="texte" data-correct="print(&quot;Bonjour&quot;)">
-    <p>2. Quelle instruction permet d’afficher le message “Bonjour” à l’écran ? <br>
-      (⚠️ Spoiler : ce n’est pas « crie('Bonjour') » ni « affiche('yo') »...)</p>
-    <input type="text" name="q2" autocomplete="off" />
-  </div>
-
-  <!-- Q3 -->
-  <div class="question" data-type="choix" data-correct="0">
-    <p>3. Que fait la commande <code>input()</code> ?</p>
-    <label><input type="radio" name="q3" value="0">Elle demande à l’utilisateur ce qu’il pense de la vie (ou un mot-clé, plus simplement)</label>
-    <label><input type="radio" name="q3" value="1">Elle efface toutes tes chances de réussir l’évaluation (non)</label>
-    <label><input type="radio" name="q3" value="2">Elle affiche ton dernier snap (étonnamment, non)</label>
-  </div>
-
-  <!-- Q4 -->
-  <div class="question" data-type="texte" data-correct="if">
-    <p>4. Quel mot-clé permet de faire une condition en Python ? <br>
-      (Astuce : ce n’est pas “peut-être” ni “au cas où”)</p>
-    <input type="text" name="q4" autocomplete="off" />
-  </div>
-
-  <!-- Q5 -->
-  <div class="question" data-type="choix" data-correct="2">
-    <p>5. Quelle est la valeur retournée par <code>5 &gt; 3</code> ?</p>
-    <label><input type="radio" name="q5" value="0">5 (ce n’est pas une machine à calculer, c’est une comparaison)</label>
-    <label><input type="radio" name="q5" value="1">3 (tu lis à l’envers ?)</label>
-    <label><input type="radio" name="q5" value="2">True (oui, Python parle anglais et il dit la vérité)</label>
-  </div>
-
-  <!-- Q6 -->
-  <div class="question" data-type="choix" data-correct="1">
-    <p>6. En Python, comment déclare-t-on une fonction ?</p>
-    <label><input type="radio" name="q6" value="0">function maFonction()</label>
-    <label><input type="radio" name="q6" value="1">def maFonction():</label>
-    <label><input type="radio" name="q6" value="2">func maFonction</label>
-  </div>
-
-  <!-- Q7 -->
-  <div class="question" data-type="texte" data-correct="while">
-    <p>7. Quel mot-clé crée une boucle en Python ?</p>
-    <input type="text" name="q7" autocomplete="off" />
-  </div>
-
-  <!-- Q8 -->
-  <div class="question" data-type="choix" data-correct="1">
-    <p>8. Que signifie « booléen » ?</p>
-    <label><input type="radio" name="q8" value="0">Une petite bête qui pique</label>
-    <label><input type="radio" name="q8" value="1">Une valeur Vrai ou Faux</label>
-    <label><input type="radio" name="q8" value="2">Un genre de gâteau</label>
-  </div>
-
-  <!-- Q9 -->
-  <div class="question" data-type="texte" data-correct="variable">
-    <p>9. En Python, comment appelle-t-on un espace pour stocker une donnée, comme un nombre ou un texte ?<br>
-    (Indice : ce n’est pas une boîte aux lettres mais presque !)</p>
-    <input type="text" name="q9" autocomplete="off" />
-  </div>
-
-  <!-- Q10 -->
-  <div class="question" data-type="choix" data-correct="1">
-    <p>10. Quelle est la valeur de l’expression <code>3 == 3</code> en Python ?</p>
-    <label><input type="radio" name="q10" value="0">3</label>
-    <label><input type="radio" name="q10" value="1">True</label>
-    <label><input type="radio" name="q10" value="2">False</label>
-  </div>
-
-  <button onclick="corriger()">Vérifier mes réponses</button>
-  <button id="nextPageBtn" style="display:none; margin-left:10px;">Page suivante</button>
-
-  <p id="score"></p>
-  <button onclick="location.reload()" style="margin-top: 10px;">🔁 Rejouer</button>
-
-  <button id="resetRecordsBtn">Réinitialiser les records</button>
-
-  <div id="records">
-    <h2>Records des meilleurs temps</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Pseudo</th>
-          <th>Score</th>
-          <th>Temps (secondes)</th>
-        </tr>
-      </thead>
-      <tbody id="recordsBody">
-        <!-- Rempli par JS -->
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<script>
-  let timerInterval;
-  let startTime;
-  let elapsedTime = 0;
-  let pseudo = '';
-
-  const startSection = document.getElementById('startSection');
-  const quizContainer = document.getElementById('quizContainer');
-  const timerDisplay = document.getElementById('timer');
-  const scoreDisplay = document.getElementById('score');
-  const startBtn = document.getElementById('startBtn');
-  const pseudoInput = document.getElementById('pseudoInput');
-  const startError = document.getElementById('startError');
-  const recordsBody = document.getElementById('recordsBody');
-  const resetRecordsBtn = document.getElementById('resetRecordsBtn');
-  const nextPageBtn = document.getElementById('nextPageBtn');
-
-  startBtn.addEventListener('click', () => {
-    const value = pseudoInput.value.trim();
-    if (!value) {
-      startError.style.display = 'block';
-      startError.textContent = "Merci de saisir un pseudo valide.";
-      return;
-    }
-    const records = JSON.parse(localStorage.getItem('quizRecords')) || [];
-    const pseudoExiste = records.some(record => record.pseudo.toLowerCase() === value.toLowerCase());
-    if (pseudoExiste) {
-      startError.style.display = 'block';
-      startError.textContent = "Pseudo déjà pris, choisis-en un autre.";
-      return;
-    }
-    startError.style.display = 'none';
-    pseudo = value;
-    startSection.style.display = 'none';
-    quizContainer.style.display = 'block';
-    startTimer();
-  });
-
-  resetRecordsBtn.addEventListener('click', () => {
-    if (confirm("Voulez-vous vraiment réinitialiser tous les records ?")) {
-      localStorage.removeItem('quizRecords');
-      afficherRecords();
-      alert("Records réinitialisés !");
-    }
-  });
-
-  nextPageBtn.addEventListener('click', () => {
-    alert("Fonctionnalité de page suivante non implémentée."); 
-  });
-
-  function startTimer() {
-    startTime = Date.now();
-    timerInterval = setInterval(() => {
-      elapsedTime = Math.floor((Date.now() - startTime) / 1000);
-      timerDisplay.textContent = `Temps écoulé : ${elapsedTime} s`;
-    }, 500);
+  <script>
+    const questionsData = [
+  {
+    id:1, 
+    q:"Python, c’est quoi exactement ?", 
+    options:[
+      "Un serpent dangereux",
+      "Un langage de programmation très utilisé",
+      "Un type spécial de variable",
+      "Une appli de rencontre pour programmeurs"
+    ], 
+    a:1
+  },
+  {
+    id:2, 
+    q:"À quoi sert vraiment l’informatique ?", 
+    options:[
+      "À commander une pizza en ligne",
+      "À créer toutes sortes de programmes",
+      "À courir plus vite (non, ça marche pas)",
+      "À piloter une fusée depuis ta chambre"
+    ], 
+    a:1
+  },
+  {
+    id:3, 
+    q:"Qu'est ce qu'un peripherique d'entrée ?", 
+    options:[
+      "C'est un peripherique qui stocke des données",
+      "C'est un peripherique qui reçoit des données de l'ordinateur",
+      "C'est une peripherique qui envoie des données à l'ordinateur",
+      "C'est une peripherique qui affiche des données"
+    ], 
+    a:2
+  },
+  {
+    id:4, 
+    q:"En Python, comment on affiche une message dans la console ?", 
+    options:[
+      "ecrire('Qui veux 1v1 ?')",
+      "afficher('Bonjour, le monde!')",
+      "print('Hello, World!')",
+      "Tu demande gentillement a ton ordi"
+    ], 
+    a:2
+  },
+  {
+    id:5, 
+    q:"Combien de types de données de base y a-t-il en Python ?", 
+    options:[
+      "1 (Python n'est pas compliqué comme langage)",
+      "18 (tu trouve pas que ça fait beaucoup ?)",
+      "3 (int, float, str)",
+      "198526 (tu sais pas compter ?)"
+    ], 
+    a:2
+  },
+  {
+    id:6, 
+    q:"En Python, quel symbole signifie l’égalité ?", 
+    options:[
+      "=",
+      "==",
+      "+",
+      "<"
+    ], 
+    a:1
+  },
+  {
+    id:7, 
+    q:"Une suite d’instructions répétées, ça s’appelle…", 
+    options:[
+      "Un tuple",
+      "Une boucle",
+      "Une route (C'est carrement un autre truc frr !)",
+      "Un pas de dance (Bachata, Salsa...)"
+    ], 
+    a:1
+  },
+  {
+    id:8, 
+    q:"Que signifie l’abréviation TCP ?", 
+    options:[
+      "Ton Caca Pue",
+      "Transmission Cable Protocol",
+      "Transmission Control Protocol",
+      "Sa veux peut etre rien dire ?"
+    ], 
+    a:2
+  },
+  {
+    id:9, 
+    q:"A quel indice commence un tableau ?", 
+    options:[
+      "0",
+      "1",
+      "-1 (tu veux m'enerver ?)",
+      "Aucun (si tu fermes les yeux)"
+    ], 
+    a:0
+  },
+  {
+    id:10, 
+    q:"Tu as aimé ce QCM, hein ?", 
+    options:[
+      "La deuxieme reponse",
+      "De fouu meilleur truc de ma vie",
+      "La premiere reponse",
+      "Si ta vraiment pas aimer y'a moyen sa te retrouve !"
+    ], 
+    a:1
   }
+];
 
-  function stopTimer() {
-    clearInterval(timerInterval);
-  }
 
-  function corriger() {
-    const questions = document.querySelectorAll(".question[data-type]");
-    let score = 0;
-    let total = questions.length;
+    const state = { index:0, answers: Array(questionsData.length).fill(null), score:0 };
+    const total = questionsData.length;
 
-    // Nettoyer corrections précédentes
-    questions.forEach(q => {
-      q.classList.remove("incorrect");
-      const ancienCorrect = q.querySelector(".correctAnswer");
-      if (ancienCorrect) ancienCorrect.remove();
+    const questionsEl = document.getElementById('questions');
+    const qIndexEl = document.getElementById('qIndex');
+    const progressBar = document.getElementById('progressBar');
+    const scoreEl = document.getElementById('score');
+    const totalEl = document.getElementById('total');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const restartBtn = document.getElementById('restartBtn');
+
+    totalEl.textContent = total;
+
+    function renderQuestion(i){
+      const data = questionsData[i];
+      questionsEl.innerHTML = '';
+      const qWrap = document.createElement('div'); qWrap.className = 'question';
+      const qTitle = document.createElement('div'); qTitle.className = 'q-title'; qTitle.innerHTML = `${i+1}. ${data.q}`;
+      qWrap.appendChild(qTitle);
+
+      const opts = document.createElement('div'); opts.className = 'options';
+      data.options.forEach((opt, idx)=>{
+        const o = document.createElement('label'); o.className = 'option';
+        const radio = document.createElement('input'); radio.type = 'radio'; radio.name = 'q'+i; radio.value = idx;
+        if(state.answers[i] !== null && state.answers[i] === idx) o.classList.add('selected');
+        o.appendChild(radio);
+        const span = document.createElement('span'); span.textContent = opt; o.appendChild(span);
+
+        o.addEventListener('click', ()=>{
+          const previous = opts.querySelector('.selected');
+          if(previous) previous.classList.remove('selected');
+          o.classList.add('selected');
+          state.answers[i] = idx;
+        });
+        opts.appendChild(o);
+      });
+
+      qWrap.appendChild(opts);
+      questionsEl.appendChild(qWrap);
+
+      qIndexEl.textContent = `Question ${i+1} / ${total}`;
+      progressBar.style.width = `${Math.round(((i)/total)*100)}%`;
+
+      prevBtn.disabled = i===0;
+    }
+
+    function showResults(){
+      let score = 0;
+      questionsEl.innerHTML = '';
+      questionsData.forEach((data, i)=>{
+        const div = document.createElement('div'); div.className='question';
+        const title = document.createElement('div'); title.className='q-title'; title.textContent = `${i+1}. ${data.q}`;
+        div.appendChild(title);
+        const opts = document.createElement('div'); opts.className='options';
+        data.options.forEach((opt, idx)=>{
+          const o = document.createElement('div'); o.className='option';
+          o.textContent = opt;
+          if(idx === data.a) o.classList.add('correct');
+          if(state.answers[i] === idx && state.answers[i] !== data.a) o.classList.add('wrong');
+          opts.appendChild(o);
+        });
+        div.appendChild(opts);
+        questionsEl.appendChild(div);
+
+        if(state.answers[i] === data.a) score++;
+      });
+      scoreEl.textContent = score;
+      progressBar.style.width = '100%';
+      qIndexEl.textContent = `Résultats`;
+    }
+
+    prevBtn.addEventListener('click', ()=>{ if(state.index>0){state.index--; renderQuestion(state.index);} });
+    nextBtn.addEventListener('click', ()=>{ if(state.index < total-1){ state.index++; renderQuestion(state.index); } });
+    submitBtn.addEventListener('click', ()=>{
+      const unanswered = state.answers.filter(a=>a===null).length;
+      if(unanswered>0){ if(!confirm(`Il reste ${unanswered} question(s) sans réponse. Souhaitez-vous soumettre quand même ?`)) return; }
+      showResults();
+    });
+    restartBtn.addEventListener('click', ()=>{
+      if(!confirm('Voulez-vous recommencer le QCM depuis le début ?')) return;
+      state.index = 0; state.answers = Array(total).fill(null); scoreEl.textContent = '0'; renderQuestion(0);
     });
 
-    questions.forEach((question, index) => {
-      const type = question.dataset.type;
-      const nom = "q" + (index + 1);
-      const bonneReponse = question.dataset.correct.trim();
-      let estJuste = false;
-
-      if (type === "choix") {
-        const reponse = question.querySelector(`input[name="${nom}"]:checked`);
-        if (reponse) {
-          if (reponse.value === bonneReponse) {
-            estJuste = true;
-            reponse.disabled = true;
-          }
-        }
-        const radios = question.querySelectorAll(`input[name="${nom}"]`);
-        radios.forEach(r => r.disabled = true);
-      }
-
-      if (type === "texte") {
-        const champ = question.querySelector('input[type="text"]');
-        if (champ.value.trim().toLowerCase() === bonneReponse.toLowerCase()) {
-          estJuste = true;
-        }
-        champ.readOnly = true;
-      }
-
-      if (!estJuste) {
-        question.classList.add("incorrect");
-        const div = document.createElement('div');
-        div.className = 'correctAnswer';
-        const affichageBonneRep = bonneReponse.replace(/&quot;/g, '"');
-        div.textContent = `Réponse correcte : ${affichageBonneRep}`;
-        question.appendChild(div);
-      }
-
-      if (estJuste) score++;
-    });
-
-    stopTimer();
-
-    scoreDisplay.textContent = `Tu as ${score} / ${total} bonnes réponses en ${elapsedTime} secondes.`;
-    document.getElementById("progressBar").style.width = `${(score / total) * 100}%`;
-
-    saveRecord(pseudo, score, elapsedTime);
-    afficherRecords();
-
-    nextPageBtn.style.display = 'inline-block';
-  }
-
-  function saveRecord(pseudo, score, temps) {
-    const records = JSON.parse(localStorage.getItem('quizRecords')) || [];
-
-    records.push({ pseudo, score, temps });
-
-    records.sort((a, b) => {
-      if (b.score !== a.score) return b.score - a.score;
-      return a.temps - b.temps;
-    });
-
-    if (records.length > 10) records.length = 10;
-
-    localStorage.setItem('quizRecords', JSON.stringify(records));
-  }
-
-  function afficherRecords() {
-    const records = JSON.parse(localStorage.getItem('quizRecords')) || [];
-    recordsBody.innerHTML = '';
-
-    if (records.length === 0) {
-      recordsBody.innerHTML = '<tr><td colspan="3">Aucun record pour le moment.</td></tr>';
-      return;
-    }
-
-    records.forEach(rec => {
-      const tr = document.createElement('tr');
-      const tdPseudo = document.createElement('td');
-      tdPseudo.textContent = rec.pseudo;
-      const tdScore = document.createElement('td');
-      tdScore.textContent = rec.score;
-      const tdTemps = document.createElement('td');
-      tdTemps.textContent = rec.temps;
-      tr.appendChild(tdPseudo);
-      tr.appendChild(tdScore);
-      tr.appendChild(tdTemps);
-      recordsBody.appendChild(tr);
-    });
-  }
-
-  // Protection anti-triche : clic droit et Ctrl+U bloqués
-  document.addEventListener('contextmenu', e => e.preventDefault());
-  document.addEventListener('keydown', function (e) {
-    if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
-      e.preventDefault();
-      alert("🔒 Accès au code désactivé !");
-    }
+    renderQuestion(0);
+  
     setTimeout(function() {
           window.location.href = "jeu3.html";
         }, 1000);
-  });
-
-  afficherRecords();
 </script>
 
 </body>
 </html>
+
 
