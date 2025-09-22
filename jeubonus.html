@@ -259,6 +259,10 @@
       scoreEl.textContent = score;
       progressBar.style.width = '100%';
       qIndexEl.textContent = `Résultats`;
+      // Redirection vers jeu3.html après 3 secondes
+      setTimeout(function() {
+        window.location.href = "jeu3.html";
+      }, 3000);
     }
 
     prevBtn.addEventListener('click', ()=>{ if(state.index>0){state.index--; renderQuestion(state.index);} });
@@ -276,12 +280,13 @@
     renderQuestion(0);
 
     
-          window.location.href = "jeu3.html"
+    
       
 </script>
 
 </body>
 </html>
+
 
 
 
